@@ -1,0 +1,18 @@
+<?php if ($this->hasError): ?>
+    <div>
+        <?= $this->error; ?>
+    </div>
+<?php else: ?>
+    <div id="tl_buttons">
+        <a href="<?= $this->hrefBack; ?>" class="header_back" title="<?= $this->back; ?>" accesskey="b" onclick="Backend.getScrollOffset();"><?= $this->back; ?></a>
+    </div>
+    <h2 class="sub_headline"><?= $this->heading; ?></h2>
+    <table cellpadding="0" cellspacing="0" class="tl_show" summary="<?= $this->summary; ?>">
+        <?php foreach ($this->data as $data): ?>
+            <tr>
+                <td class="<?= $data["keyclass"] ?>"><span class="tl_label"><?= $data["key"] ?></span></td>
+                <td class="<?= $data["valueclass"] ?>"><?= $data["value"] ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+<?php endif; ?>

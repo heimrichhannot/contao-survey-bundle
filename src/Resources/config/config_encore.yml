@@ -1,0 +1,7 @@
+huh:
+    encore:
+        entries:
+            - { name: contao-survey-bundle, file: "vendor/heimrichhannot/contao-survey-bundle/src/Resources/public/js/survey-bundle.js" }
+        legacy:
+              js:
+                - survey

@@ -1,0 +1,22 @@
+<div id="tl_buttons">
+    <a href="<?= $this->export['href']; ?>" class="<?= $this->export['class']; ?> header_export" title="<?= $this->export['label']; ?>" onclick="Backend.getScrollOffset();"><?= $this->export['label']; ?></a> &nbsp; :: &nbsp;
+    <a href="<?= $this->hrefBack; ?>" class="header_back" title="<?= $this->back; ?>" accesskey="b" onclick="Backend.getScrollOffset();"><?= $this->back; ?></a>
+</div>
+
+<div class="tl_listing_container">
+    <h2 class="sub_headline"><?= $this->heading; ?></h2>
+    <table cellpadding="0" cellspacing="0" class="tl_listing" summary="<?= $this->summary; ?>">
+        <?php foreach ($this->data as $data): ?>
+            <tr class="hover-row">
+                <td class="tl_file_list">
+                    <div class="questionheader"><span class="questionnumber"><?= $data["number"] ?>.</span> <span class="questiontitle"><?= $data["title"] ?></span> <span class="questiontype">[<?= $data["type"] ?>]</span></div>
+                    <div class="statdata">
+                        <div><?= $this->lngAnswered ?>: <?= $data["answered"] ?></div>
+                        <div><?= $this->lngSkipped; ?>: <?= $data["skipped"] ?></div>
+                    </div>
+                </td>
+                <td class="tl_file_list tl_right_nowrap"><a href="<?= $data["hrefdetails"] ?>" title="<?= $data["titledetails"] ?>"><img src="<?= $this->imgdetails; ?>" width="16" height="16" alt="<?= $data["titledetails"] ?>"/></a></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+</div>

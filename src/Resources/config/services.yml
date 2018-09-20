@@ -1,0 +1,31 @@
+services:
+# survey services
+  huh.survey.manager:
+    class: HeimrichHannot\SurveyBundle\Manager\SurveyManager
+    public: true
+    arguments:
+    - "@contao.framework"
+  huh_exporter.exporter.surveyResults:
+    class: HeimrichHannot\SurveyBundle\Exporter\CumulatedResultsExporter
+    tags: ['huh_exporter.exporter']
+    public: true
+    arguments:
+    - "@service_container"
+    - "@contao.framework"
+    - "@event_dispatcher"
+  huh_exporter.exporter.surveyDetails:
+    class: HeimrichHannot\SurveyBundle\Exporter\ResultDetailsExporter
+    tags: ['huh_exporter.exporter']
+    public: true
+    arguments:
+    - "@service_container"
+    - "@contao.framework"
+    - "@event_dispatcher"
+  huh_exporter.exporter.tan:
+    class: HeimrichHannot\SurveyBundle\Exporter\TanExporter
+    tags: ['huh_exporter.exporter']
+    public: true
+    arguments:
+    - "@service_container"
+    - "@contao.framework"
+    - "@event_dispatcher"
