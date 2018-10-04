@@ -12,6 +12,9 @@ $GLOBALS['TL_DCA']['tl_survey_participant'] = [
         'doNotCopyRecords'  => true,
         'enableVersioning'  => true,
         'closed'            => true,
+        'onload_callback'   => [
+            ['tl_survey_participant', 'checkPermission'],
+        ],
         'ondelete_callback' => [
             ['tl_survey_participant', 'deleteParticipant'],
         ],
@@ -41,7 +44,7 @@ $GLOBALS['TL_DCA']['tl_survey_participant'] = [
                 'label'      => &$GLOBALS['TL_LANG']['MSC']['deleteAll'],
                 'href'       => 'act=deleteAll',
                 'class'      => 'header_delete_all',
-                'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['delAllConfirm'] . '\')) return false; Backend.getScrollOffset();"',
+                'attributes' => 'onclick="if (!confirm(\''.$GLOBALS['TL_LANG']['MSC']['delAllConfirm'].'\')) return false; Backend.getScrollOffset();"',
             ],
         ],
         'operations'        => [
@@ -49,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_survey_participant'] = [
                 'label'      => &$GLOBALS['TL_LANG']['tl_survey_participant']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if (!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\')) return false; Backend.getScrollOffset();"',
+                'attributes' => 'onclick="if (!confirm(\''.$GLOBALS['TL_LANG']['MSC']['deleteConfirm'].'\')) return false; Backend.getScrollOffset();"',
             ],
             'show'   => [
                 'label' => &$GLOBALS['TL_LANG']['tl_survey_participant']['show'],
@@ -124,11 +127,56 @@ class tl_survey_participant extends Backend
 {
     protected $pageCount = null;
 
+    /**
+     * Check permissions to edit table tl_comments
+     *
+     * @throws Contao\CoreBundle\Exception\AccessDeniedException
+     */
+    public function checkPermission()
+    {
+        switch (Input::get('act'))
+        {
+            case 'select':
+            case 'show':
+            case 'edit':
+            case 'delete':
+            case 'toggle':
+                // Allow
+                break;
+
+            case 'editAll':
+            case 'deleteAll':
+            case 'overrideAll':
+                /** @var Symfony\Component\HttpFoundation\Session\SessionInterface $objSession */
+                $objSession = System::getContainer()->get('session');
+
+                $session = $objSession->all();
+
+                $objParticipants = $this->Database->prepare("SELECT id FROM tl_survey_participant WHERE pid = ?")->execute((int) Input::get('id'));
+
+                if($objParticipants->numRows < 1)
+                {
+                    break;
+                }
+
+                $session['CURRENT']['IDS'] = array_values($objParticipants->fetchEach('id'));
+                $objSession->replace($session);
+                break;
+
+            default:
+                if (\strlen(Input::get('act')))
+                {
+                    throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid command "' . Input::get('act') . '.');
+                }
+                break;
+        }
+    }
+
     public function deleteParticipant($dc)
     {
-        $objResult = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE (id=?)")->execute($dc->id);
+        $objResult = $this->Database->prepare("SELECT * FROM ".$dc->table." WHERE (id=?)")->execute($dc->id);
         if ($objResult->next()) {
-            setcookie('TLsvy_' . $objResult->pid, $objResult->pin, time() - 3600, "/");
+            setcookie('TLsvy_'.$objResult->pid, $objResult->pin, time() - 3600, "/");
             $objDelete = $this->Database->prepare("DELETE FROM tl_survey_pin_tan WHERE (pid=? AND pin=?)")->execute($objResult->pid, $objResult->pin);
             $objDelete = $this->Database->prepare("DELETE FROM tl_survey_result WHERE (pid=? AND pin=?)")->execute($objResult->pid, $objResult->pin);
         }
@@ -138,15 +186,20 @@ class tl_survey_participant extends Backend
     {
         $data = $this->Database->prepare("SELECT * FROM tl_member WHERE (id=?)")->execute($uid)->fetchAssoc();
 
-        return trim($data["firstname"] . " " . $data["lastname"]);
+        return trim($data["firstname"]." ".$data["lastname"]);
     }
 
     public function getLabel($row, $label)
     {
         // we ignore the label param, the row has it all
         $finished = intval($row['finished']);
-        $result   = sprintf('<div>%s, <strong>%s</strong> <span style="color: #7f7f7f;">[%s%s]</span></div>', date($GLOBALS['TL_CONFIG']['datimFormat'], $row['tstamp']), ($row['uid'] > 0) ? $this->getUsername($row['uid']) : $row['pin'], ($finished) ? $GLOBALS['TL_LANG']['tl_survey_participant']['finished'] : $GLOBALS['TL_LANG']['tl_survey_participant']['running'],
-            ($finished) ? '' : ' (' . $row['lastpage'] . '/' . $this->getPageCount($row['pid']) . ')');
+        $result   = sprintf(
+            '<div>%s, <strong>%s</strong> <span style="color: #7f7f7f;">[%s%s]</span></div>',
+            date($GLOBALS['TL_CONFIG']['datimFormat'], $row['tstamp']),
+            ($row['uid'] > 0) ? $this->getUsername($row['uid']) : $row['pin'],
+            ($finished) ? $GLOBALS['TL_LANG']['tl_survey_participant']['finished'] : $GLOBALS['TL_LANG']['tl_survey_participant']['running'],
+            ($finished) ? '' : ' ('.$row['lastpage'].'/'.$this->getPageCount($row['pid']).')'
+        );
 
         return $result;
     }
@@ -161,11 +214,13 @@ class tl_survey_participant extends Backend
     protected function getPageCount($survey_id)
     {
         if (!isset($this->pageCount)) {
-            $objCount        = $this->Database->prepare("
+            $objCount        = $this->Database->prepare(
+                "
 					SELECT COUNT(*) AS pagecount
 					FROM   tl_survey_page
 					WHERE  pid=?
-				")->execute($survey_id);
+				"
+            )->execute($survey_id);
             $this->pageCount = $objCount->pagecount;
         }
 
