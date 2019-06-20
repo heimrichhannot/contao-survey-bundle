@@ -3,6 +3,7 @@
 namespace HeimrichHannot\SurveyBundle\Question;
 
 use Contao\FrontendTemplate;
+use Contao\StringUtil;
 use Contao\System;
 use HeimrichHannot\SurveyBundle\Model\SurveyResultModel;
 
@@ -42,7 +43,7 @@ class SurveyQuestionMultiplechoice extends SurveyQuestion
             $this->arrStatistics["participants"][$id][] = $objResult->row();
             $this->arrStatistics["answers"][]           = $objResult->result;
             if (strlen($objResult->result)) {
-                $arrAnswer = deserialize($objResult->result, true);
+                $arrAnswer = StringUtil::deserialize($objResult->result, true);
                 $found     = false;
                 if (is_array($arrAnswer['value'])) {
                     foreach ($arrAnswer['value'] as $answervalue) {

@@ -58,6 +58,9 @@ class ResultDetailsExporter extends ExcelExporter
         if (0 === $databaseResult->numRows) {
             return $formattedRows;
         }
+        // TODO: find better way
+        // generate default array
+        $formattedRows = array_fill(0, 500, array_fill(0, 500, ''));
 
         System::loadLanguageFile('tl_survey_result');
         System::loadLanguageFile('tl_survey_question');
@@ -67,7 +70,7 @@ class ResultDetailsExporter extends ExcelExporter
         foreach ($cells as $cell) {
             $formattedRows[$cell['row']][$cell['col']] = $cell['data'];
         }
-        $rowCounter = 8; // questionheaders will occupy that many rows
+        $rowCounter = 8; // question headers will occupy that many rows
         $colCounter = 0;
 
         $participants = $this->fetchParticipants(System::getContainer()->get('huh.request')->get('id'));

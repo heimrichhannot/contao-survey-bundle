@@ -20,7 +20,7 @@ $GLOBALS['TL_LANG']['tl_survey_result']['ex_question_skipped']     = 'Übersprun
 $GLOBALS['TL_LANG']['tl_survey_result']['ex_question_title']       = 'Titel';
 $GLOBALS['TL_LANG']['tl_survey_result']['ex_question_id_gen']      = 'ID';
 $GLOBALS['TL_LANG']['tl_survey_result']['ex_question_sort']        = 'Sort';
-$GLOBALS['TL_LANG']['tl_survey_result']['ex_question_sort']        = 'Datum';
+$GLOBALS['TL_LANG']['tl_survey_result']['ex_question_date']        = 'Datum';
 $GLOBALS['TL_LANG']['tl_survey_result']['ex_question_lastpage']    = 'Letzte Seite';
 $GLOBALS['TL_LANG']['tl_survey_result']['ex_question_participant'] = 'Teilnehmer';
 

@@ -32,12 +32,12 @@ class SurveyQuestionOpenendedEx extends SurveyQuestionOpenended
      * which does a good job here by default. However Excel 95/97 seems to do it worse,
      * I can't test that currently. "Set optimal row height" might help users of Excel.
      *
-     * @param object &$xls            the excel object to call methods on
-     * @param string $sheet           name of the worksheet
-     * @param int    &$row            row to put a cell in
-     * @param int    &$col            col to put a cell in
-     * @param array  $questionNumbers array with page and question numbers
-     * @param array  $participants    array with all participant data
+     * @param object &$xls             the excel object to call methods on
+     * @param string  $sheet           name of the worksheet
+     * @param int    &$row             row to put a cell in
+     * @param int    &$col             col to put a cell in
+     * @param array   $questionNumbers array with page and question numbers
+     * @param array   $participants    array with all participant data
      *
      * @return array  the cells to be added to the export
      */
@@ -58,10 +58,10 @@ class SurveyQuestionOpenendedEx extends SurveyQuestionOpenended
      * Several rows are returned, so that the user of the Excel file is able to
      * use them for reference, filtering and sorting.
      *
-     * @param int   &$row            in/out row to put a cell in
-     * @param int   &$col            in/out col to put a cell in
-     * @param array $questionNumbers array with page and question numbers
-     * @param array &$rotateInfo     out param with row => text for later calculation of row height
+     * @param int   &$row             in/out row to put a cell in
+     * @param int   &$col             in/out col to put a cell in
+     * @param array  $questionNumbers array with page and question numbers
+     * @param array &$rotateInfo      out param with row => text for later calculation of row height
      *
      * @return array  the cells to be added to the export
      */
@@ -127,9 +127,9 @@ class SurveyQuestionOpenendedEx extends SurveyQuestionOpenended
      *
      * Sets column widthes as a side effect.
      *
-     * @param int   &$row         row to put a cell in
-     * @param int   &$col         col to put a cell in
-     * @param array $participants array with all participant data
+     * @param int   &$row          row to put a cell in
+     * @param int   &$col          col to put a cell in
+     * @param array  $participants array with all participant data
      *
      * @return array  the cells to be added to the export
      */
@@ -138,10 +138,10 @@ class SurveyQuestionOpenendedEx extends SurveyQuestionOpenended
         $cells = [];
         foreach ($participants as $key => $value) {
             $data = false;
-            if (strlen($this->statistics['participants'][$key]['result'])) {
+            if (isset($this->statistics['participants'][$key]['result'])) {
                 // future state of survey_ce
                 $data = $this->statistics['participants'][$key]['result'];
-            } elseif (strlen($this->statistics['participants'][$key][0]['result'])) {
+            } elseif (isset($this->statistics['participants'][$key][0]['result'])) {
                 // current state of survey_ce: additional subarray with always 1 entry
                 $data = $this->statistics['participants'][$key][0]['result'];
             }
@@ -150,6 +150,13 @@ class SurveyQuestionOpenendedEx extends SurveyQuestionOpenended
                     'row'  => $row,
                     'col'  => $col,
                     'data' => StringUtil::decodeEntities($data),
+                ];
+            } else {
+                // add an empty cell bc formatting
+                $cells[] = [
+                    'row'  => $row,
+                    'col'  => $col,
+                    'data' => '',
                 ];
             }
             $row++;
