@@ -58,23 +58,22 @@ class ResultDetailsExporter extends ExcelExporter
         if (0 === $databaseResult->numRows) {
             return $formattedRows;
         }
-        // TODO: find better way
-        // generate default array
-        $formattedRows = array_fill(0, 500, array_fill(0, 500, ''));
 
         System::loadLanguageFile('tl_survey_result');
         System::loadLanguageFile('tl_survey_question');
         $sheet = utf8_decode($GLOBALS['TL_LANG']['tl_survey_result']['detailedResults']);
 
-        $cells = $this->exportTopLeftArea();
+        $participants = $this->fetchParticipants(System::getContainer()->get('huh.request')->get('id'));
+        // generate default array - first array amount of rows (participants) second array amount of columns (questions) (default: 100) bc formatting
+        $formattedRows = array_fill(0, count($participants), array_fill(0, 100, ''));
+        $cells         = $this->exportTopLeftArea();
         foreach ($cells as $cell) {
             $formattedRows[$cell['row']][$cell['col']] = $cell['data'];
         }
         $rowCounter = 8; // question headers will occupy that many rows
         $colCounter = 0;
 
-        $participants = $this->fetchParticipants(System::getContainer()->get('huh.request')->get('id'));
-        $cells        = $this->exportParticipantRowHeaders($sheet, $rowCounter, $colCounter, $participants);
+        $cells = $this->exportParticipantRowHeaders($sheet, $rowCounter, $colCounter, $participants);
         foreach ($cells as $cell) {
             $formattedRows[$cell['row']][$cell['col']] = $cell['data'];
         }
