@@ -167,16 +167,14 @@ class ContentSurvey extends ContentElement
             // HOOK: pass validated questions to callback functions
             if (isset($GLOBALS['TL_HOOKS']['surveyQuestionsValidated']) && is_array($GLOBALS['TL_HOOKS']['surveyQuestionsValidated'])) {
                 foreach ($GLOBALS['TL_HOOKS']['surveyQuestionsValidated'] as $callback) {
-                    $this->import($callback[0]);
-                    $this->$callback[0]->$callback[1]($surveyPage, $pagerow);
+                    System::importStatic($callback[0])->{$callback[1]}($surveyPage, $pagerow);
                 }
             }
         } else {
             // HOOK: pass loaded questions to callback functions
             if (isset($GLOBALS['TL_HOOKS']['surveyQuestionsLoaded']) && is_array($GLOBALS['TL_HOOKS']['surveyQuestionsLoaded'])) {
                 foreach ($GLOBALS['TL_HOOKS']['surveyQuestionsLoaded'] as $callback) {
-                    $this->import($callback[0]);
-                    $this->$callback[0]->$callback[1]($surveyPage, $pagerow);
+                    System::importStatic($callback[0])->{$callback[1]}($surveyPage, $pagerow);
                 }
             }
         }

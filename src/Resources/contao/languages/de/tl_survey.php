@@ -82,5 +82,3 @@ $GLOBALS['TL_LANG']['tl_survey']['activation_legend'] = "Aktivierung";
 $GLOBALS['TL_LANG']['tl_survey']['access_legend'] = "Zugriff";
 $GLOBALS['TL_LANG']['tl_survey']['texts_legend'] = "Einleitende und abschließende Bemerkung";
 $GLOBALS['TL_LANG']['tl_survey']['misc_legend'] = "Allgemeine Einstellungen";
- 
-?>

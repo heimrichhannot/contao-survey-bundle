@@ -263,8 +263,8 @@ class tl_survey extends Backend
         parent::__construct();
 
         // somehow dirty patch to allow going back if someone clicks back on a survey question list
-        if (strpos($this->getReferer(ENCODE_AMPERSANDS), 'tl_survey_question')) {
-            if (preg_match("/id=(\\d+)/", $this->getReferer(ENCODE_AMPERSANDS), $matches)) {
+        if (strpos($this->getReferer(), 'tl_survey_question')) {
+            if (preg_match("/id=(\\d+)/", $this->getReferer(), $matches)) {
                 $surveyPage = \Contao\System::getContainer()->get('contao.framework')->getAdapter(\HeimrichHannot\SurveyBundle\Model\SurveyPageModel::class)->findByPk($matches[1]);
                 if (null !== $surveyPage && $surveyPage->id > 0) {
                     $this->redirect($this->addToUrl('table=tl_survey_page&id=' . $surveyPage->id));

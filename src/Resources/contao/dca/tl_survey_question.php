@@ -596,7 +596,7 @@ class tl_survey_question extends Backend
 
 <h2 class="sub_headline">' . $GLOBALS['TL_LANG']['tl_survey_question']['addscale'][0] . '</h2>' . $this->getMessages() . '
 
-<form action="' . ampersand(\Environment::get('request'), ENCODE_AMPERSANDS) . '" id="tl_add_scale" class="tl_form" method="post">
+<form action="' . ampersand(\Environment::get('request')) . '" id="tl_add_scale" class="tl_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_add_scale" />
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '" />
