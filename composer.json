@@ -47,5 +47,6 @@
     "extra": {
         "contao-manager-plugin": "HeimrichHannot\\SurveyBundle\\ContaoManager\\Plugin",
         "foxy": true
-    }
+    },
+    "abandoned": "hschottm/contao-survey"
 }
